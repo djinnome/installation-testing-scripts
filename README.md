@@ -59,17 +59,20 @@ file listing the lessons you will cover.  For example:
 
 ```json
 {
-  "shell": {
-    "requirements": "https://raw.githubusercontent.com/swcarpentry/shell-novice/v5.4/requirements.json"
-  },
-  "git": {
-    "requirements": "https://raw.githubusercontent.com/swcarpentry/git-novice/v5.3/requirements.json"
-  },
-  "python": {
-    "requirements": "https://raw.githubusercontent.com/swcarpentry/python-novice-inflammation/v5.4/requirements.json"
-  },
-  "sql": {
-    "requirements": "https://raw.githubusercontent.com/swcarpentry/sql-novice-survey/v5.7/requirements.json"
+  "instructions": "https://swcarpentry.github.io/2015-11-09-abc/#setup",
+  "lessons": {
+    "shell": {
+      "requirements": "https://raw.githubusercontent.com/swcarpentry/shell-novice/v5.4/requirements.json"
+    },
+    "git": {
+      "requirements": "https://raw.githubusercontent.com/swcarpentry/git-novice/v5.3/requirements.json"
+    },
+    "python": {
+      "requirements": "https://raw.githubusercontent.com/swcarpentry/python-novice-inflammation/v5.4/requirements.json"
+    },
+    "sql": {
+      "requirements": "https://raw.githubusercontent.com/swcarpentry/sql-novice-survey/v5.7/requirements.json"
+    }
   }
 }
 ```

@@ -104,7 +104,7 @@ class InvalidCheck (KeyError):
 
 
 class DependencyError (Exception):
-    _default_url = 'http://software-carpentry.org/setup/'
+    default_url = 'https://swcarpentry.github.io/workshop-template/#setup'
     _setup_urls = {  # (system, version, package) glob pairs
         ('*', '*', 'Cython'): 'http://docs.cython.org/src/quickstart/install.html',
         ('Linux', '*', 'EasyMercurial'): 'http://easyhg.org/download.html#download-linux',
@@ -196,7 +196,7 @@ class DependencyError (Exception):
                     _fnmatch.fnmatch(version, v) and
                     _fnmatch.fnmatch(package, p)):
                 return url
-        return self._default_url
+        return self.default_url
 
     def __str__(self):
         url = self.get_url()
@@ -929,8 +929,11 @@ def _update_checker(url, checker, config):
 def get_checks(url):
     checks = set()
     _LOG.debug('get lessons from {}'.format(url))
-    lessons = _get_json(url=url)
-    for lesson, lesson_config in lessons.items():
+    setup = _get_json(url=url)
+    instructions = setup.get('instructions')
+    if instructions:
+        DependencyError.default_url = instructions
+    for lesson, lesson_config in setup.get('lessons', {}).items():
         requirements_url = lesson_config.get('requirements')
         if requirements_url:
             _LOG.debug('get requirements for {} from {}'.format(
