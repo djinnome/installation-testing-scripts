@@ -71,6 +71,11 @@ except ImportError:  # Python 2.x
     import urllib as _urllib_parse  # for quote()
 import xml.etree.ElementTree as _element_tree
 
+try:
+    import distro as _distro
+except ImportError:
+    _distro = None
+
 
 if not hasattr(_shlex, 'quote'):  # Python versions older than 3.3
     # Use the undocumented pipes.quote()
@@ -215,15 +220,20 @@ class DependencyError (Exception):
     def get_url(self):
         system = _platform.system()
         version = None
-        for pversion in (
-            'linux_distribution',
-            'mac_ver',
-            'win32_ver',
-            ):
-            value = getattr(_platform, pversion)()
-            if value[0]:
-                version = value[0]
+        if system == 'Linux' and _distro:
+            version = _distro.id()
+        else:
+            for pversion in (
+                    'linux_distribution',
+                    'mac_ver',
+                    'win32_ver',
+                    ):
+                value = getattr(_platform, pversion)()
+                if value[0]:
+                    version = value[0]
                 break
+        if not version:
+            version = '*'
         package = self.checker.name
         for (s,v,p),url in self._setup_urls.items():
             if (_fnmatch.fnmatch(system, s) and
@@ -980,14 +990,20 @@ def print_system_info():
     _print_info('os.uname', _platform.uname())
     _print_info('platform', _sys.platform)
     _print_info('platform+', _platform.platform())
-    for pversion in (
+    system = _platform.system()
+    if system == 'Linux' and _distro:
+        _print_info(
             'linux_distribution',
-            'mac_ver',
-            'win32_ver',
-            ):
-        value = getattr(_platform, pversion)()
-        if value[0]:
-            _print_info(pversion, value)
+            _distro.name(pretty=True) or _distro.linux_distribution())
+    else:
+        for pversion in (
+                'linux_distribution',
+                'mac_ver',
+                'win32_ver',
+                ):
+            value = getattr(_platform, pversion)()
+            if value[0]:
+                _print_info(pversion, value)
     _print_info('prefix', _sys.prefix)
     _print_info('exec_prefix', _sys.exec_prefix)
     _print_info('executable', _sys.executable)
